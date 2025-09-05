@@ -130,8 +130,8 @@ app.use(
   cors({
     // origin: ["http://localhost:3000", "http://localhost:3001"],
     origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
+      // "http://localhost:3000",
+      // "http://localhost:3001",
       "https://zerodha-frontend-2sxf2ylt5-abhishek-singhs-projects-37044235.vercel.app",
     ],
     credentials: true,
