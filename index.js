@@ -125,7 +125,6 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
-      "https://zerodha-frontend-3z5i.vercel.app", // your deployed frontend
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
