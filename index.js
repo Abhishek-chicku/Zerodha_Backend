@@ -119,20 +119,25 @@ const uri = process.env.MONGO_URL;
 
 const app = express();
 
-// ✅ CORS fixed for deployment
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
-  })
-);
+// ✅ CORS setup
+const FRONTENDS = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://zerodha-frontend-m8ag-9hua1crem.vercel.app/login"
+];
 
-app.options("*", cors()); // handle preflight
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow non-browser requests like Postman
+    if (FRONTENDS.indexOf(origin) !== -1) return callback(null, true);
+    return callback(new Error("CORS blocked: Origin not allowed"));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
+// Middlewares
 app.use(express.json());
 app.use(cookieParser());
 
@@ -207,6 +212,7 @@ app.get("/api/allPositions", async (req, res) => {
   }
 });
 
+// MongoDB connection + start server
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
@@ -214,4 +220,3 @@ mongoose
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => console.error("MongoDB connection error:", err.message));
-
